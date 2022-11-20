@@ -1,6 +1,6 @@
 import { Finding, FindingSeverity, FindingType } from "forta-agent";
 
-export const CreateFinding = (
+export const createFinding = (
   agentId: number,
   metadata: string,
   chainIds: number[]
