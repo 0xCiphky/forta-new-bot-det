@@ -19,7 +19,7 @@ export function provideHandleTransaction(
       return findings;
     }
     // Filter the transaction for functions that match the create botfunction and that are sent to the proxy contract
-    const newAgents = txEvent.filterFunction(
+    const newBots = txEvent.filterFunction(
       createAgentFunction,
       proxyContractAddress
     );
