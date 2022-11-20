@@ -2,6 +2,7 @@
   "name": "new-forta-bot-detection",
   "version": "0.0.1",
   "description": "Forta Bot to detect when new bots are deployed by the Nethermind team",
+  "url": "https://github.com/areezladhani/forta-new-bot-det",
   "chainIds": [
     137
   ],

@@ -1,24 +1,15 @@
 import { TestTransactionEvent } from "forta-agent-tools/lib/test";
 import { createAddress } from "forta-agent-tools";
 import { Finding, HandleTransaction, TransactionEvent } from "forta-agent";
-import {
-  FORTA_DEPLOYER_ADDRESS,
-  CREATE_AGENT_FUNCTION,
-  UPDATE_AGENT_FUNCTION,
-  PROXY_CONTRACT_ADDRESS,
-} from "./constants";
+import { FORTA_DEPLOYER_ADDRESS, CREATE_AGENT_FUNCTION, PROXY_CONTRACT_ADDRESS } from "./constants";
 import { provideHandleTransaction } from "./agent";
 import { CreateFinding } from "./findings";
 
 const RAND_ADDR: string = createAddress("0xab01");
+const UPDATE_AGENT_FUNCTION: string = "function updateAgent(uint256 agentId,string metadata,uint256[] chainIds)";
 
 //Create mock arguments for testing
-const createMockArgs = (
-  agentId: number,
-  owner: string,
-  metaData: string,
-  chainId: number[]
-) => {
+const createMockArgs = (agentId: number, owner: string, metaData: string, chainId: number[]) => {
   return {
     agentId: agentId,
     owner: owner,
@@ -29,22 +20,13 @@ const createMockArgs = (
 
 const mockArguments = createMockArgs(1, createAddress("0x0"), "", [1, 2]);
 const mockArguments2 = createMockArgs(2, createAddress("0x1"), "", [17]);
-const mockArguments3 = createMockArgs(
-  3,
-  createAddress("0x2"),
-  "",
-  [100, 22, 33]
-);
+const mockArguments3 = createMockArgs(3, createAddress("0x2"), "", [100, 22, 33]);
 
 describe("New bot deployed agent", () => {
   let handleTransaction: HandleTransaction;
 
   beforeEach(() => {
-    handleTransaction = provideHandleTransaction(
-      FORTA_DEPLOYER_ADDRESS,
-      CREATE_AGENT_FUNCTION,
-      PROXY_CONTRACT_ADDRESS
-    );
+    handleTransaction = provideHandleTransaction(FORTA_DEPLOYER_ADDRESS, CREATE_AGENT_FUNCTION, PROXY_CONTRACT_ADDRESS);
   });
 
   it("ignores empty transactions", async () => {
@@ -61,11 +43,7 @@ describe("New bot deployed agent", () => {
         function: UPDATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
         from: FORTA_DEPLOYER_ADDRESS,
-        arguments: [
-          mockArguments.agentId,
-          mockArguments.metaData,
-          mockArguments.chainId,
-        ],
+        arguments: [mockArguments.agentId, mockArguments.metaData, mockArguments.chainId],
       });
     const findings: Finding[] = await handleTransaction(txEvent);
     expect(findings).toStrictEqual([]);
@@ -78,12 +56,7 @@ describe("New bot deployed agent", () => {
       .addTraces({
         function: CREATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
-        arguments: [
-          mockArguments.agentId,
-          mockArguments.owner,
-          mockArguments.metaData,
-          mockArguments.chainId,
-        ],
+        arguments: [mockArguments.agentId, mockArguments.owner, mockArguments.metaData, mockArguments.chainId],
       });
     const findings: Finding[] = await handleTransaction(txEvent);
     expect(findings).toStrictEqual([]);
@@ -96,23 +69,12 @@ describe("New bot deployed agent", () => {
       .addTraces({
         function: CREATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
-        arguments: [
-          mockArguments.agentId,
-          mockArguments.owner,
-          mockArguments.metaData,
-          mockArguments.chainId,
-        ],
+        arguments: [mockArguments.agentId, mockArguments.owner, mockArguments.metaData, mockArguments.chainId],
       });
 
     const findings: Finding[] = await handleTransaction(txEvent);
 
-    const mockFinding = [
-      CreateFinding(
-        mockArguments.agentId,
-        mockArguments.metaData,
-        mockArguments.chainId
-      ),
-    ];
+    const mockFinding = [CreateFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId)];
 
     expect(findings).toStrictEqual(mockFinding);
   });
@@ -124,52 +86,25 @@ describe("New bot deployed agent", () => {
       .addTraces({
         function: CREATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
-        arguments: [
-          mockArguments.agentId,
-          mockArguments.owner,
-          mockArguments.metaData,
-          mockArguments.chainId,
-        ],
+        arguments: [mockArguments.agentId, mockArguments.owner, mockArguments.metaData, mockArguments.chainId],
       })
       .addTraces({
         function: CREATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
-        arguments: [
-          mockArguments2.agentId,
-          mockArguments2.owner,
-          mockArguments2.metaData,
-          mockArguments2.chainId,
-        ],
+        arguments: [mockArguments2.agentId, mockArguments2.owner, mockArguments2.metaData, mockArguments2.chainId],
       })
       .addTraces({
         function: CREATE_AGENT_FUNCTION,
         to: PROXY_CONTRACT_ADDRESS,
-        arguments: [
-          mockArguments3.agentId,
-          mockArguments3.owner,
-          mockArguments3.metaData,
-          mockArguments3.chainId,
-        ],
+        arguments: [mockArguments3.agentId, mockArguments3.owner, mockArguments3.metaData, mockArguments3.chainId],
       });
 
     const findings: Finding[] = await handleTransaction(txEvent);
 
     const mockFindings = [
-      CreateFinding(
-        mockArguments.agentId,
-        mockArguments.metaData,
-        mockArguments.chainId
-      ),
-      CreateFinding(
-        mockArguments2.agentId,
-        mockArguments2.metaData,
-        mockArguments2.chainId
-      ),
-      CreateFinding(
-        mockArguments3.agentId,
-        mockArguments3.metaData,
-        mockArguments3.chainId
-      ),
+      CreateFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId),
+      CreateFinding(mockArguments2.agentId, mockArguments2.metaData, mockArguments2.chainId),
+      CreateFinding(mockArguments3.agentId, mockArguments3.metaData, mockArguments3.chainId),
     ];
 
     expect(findings).toStrictEqual(mockFindings);
