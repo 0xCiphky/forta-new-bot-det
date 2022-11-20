@@ -1,10 +1,6 @@
 import { Finding, HandleTransaction, TransactionEvent } from "forta-agent";
-import { CreateFinding } from "./findings";
-import {
-  FORTA_DEPLOYER_ADDRESS,
-  CREATE_AGENT_FUNCTION,
-  PROXY_CONTRACT_ADDRESS,
-} from "./constants";
+import { createFinding } from "./findings";
+import { FORTA_DEPLOYER_ADDRESS, CREATE_AGENT_FUNCTION, PROXY_CONTRACT_ADDRESS } from "./constants";
 
 export function provideHandleTransaction(
   deployerAddress: string,
@@ -19,15 +15,12 @@ export function provideHandleTransaction(
       return findings;
     }
     // Filter the transaction for functions that match the create botfunction and that are sent to the proxy contract
-    const newAgents = txEvent.filterFunction(
-      createAgentFunction,
-      proxyContractAddress
-    );
+    const newAgents = txEvent.filterFunction(createAgentFunction, proxyContractAddress);
 
     // Create a new finding for each valid transaction that meets the requirements
     newAgents.forEach((agent) => {
       const { agentId, metadata, chainIds } = agent.args;
-      const finding = CreateFinding(agentId, metadata, chainIds);
+      const finding = createFinding(agentId, metadata, chainIds);
       findings.push(finding);
     });
 
@@ -35,9 +28,5 @@ export function provideHandleTransaction(
   };
 }
 export default {
-  handleTransaction: provideHandleTransaction(
-    FORTA_DEPLOYER_ADDRESS,
-    CREATE_AGENT_FUNCTION,
-    PROXY_CONTRACT_ADDRESS
-  ),
+  handleTransaction: provideHandleTransaction(FORTA_DEPLOYER_ADDRESS, CREATE_AGENT_FUNCTION, PROXY_CONTRACT_ADDRESS),
 };

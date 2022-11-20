@@ -3,7 +3,7 @@ import { createAddress } from "forta-agent-tools";
 import { Finding, HandleTransaction, TransactionEvent } from "forta-agent";
 import { FORTA_DEPLOYER_ADDRESS, CREATE_AGENT_FUNCTION, PROXY_CONTRACT_ADDRESS } from "./constants";
 import { provideHandleTransaction } from "./agent";
-import { CreateFinding } from "./findings";
+import { createFinding } from "./findings";
 
 const RAND_ADDR: string = createAddress("0xab01");
 const UPDATE_AGENT_FUNCTION: string = "function updateAgent(uint256 agentId,string metadata,uint256[] chainIds)";
@@ -74,7 +74,7 @@ describe("New bot deployed agent", () => {
 
     const findings: Finding[] = await handleTransaction(txEvent);
 
-    const mockFinding = [CreateFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId)];
+    const mockFinding = [createFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId)];
 
     expect(findings).toStrictEqual(mockFinding);
   });
@@ -102,9 +102,9 @@ describe("New bot deployed agent", () => {
     const findings: Finding[] = await handleTransaction(txEvent);
 
     const mockFindings = [
-      CreateFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId),
-      CreateFinding(mockArguments2.agentId, mockArguments2.metaData, mockArguments2.chainId),
-      CreateFinding(mockArguments3.agentId, mockArguments3.metaData, mockArguments3.chainId),
+      createFinding(mockArguments.agentId, mockArguments.metaData, mockArguments.chainId),
+      createFinding(mockArguments2.agentId, mockArguments2.metaData, mockArguments2.chainId),
+      createFinding(mockArguments3.agentId, mockArguments3.metaData, mockArguments3.chainId),
     ];
 
     expect(findings).toStrictEqual(mockFindings);
